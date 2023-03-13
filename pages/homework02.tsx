@@ -48,6 +48,9 @@ export default function homework02() {
                         <Link href="/homework02/dragAndDropList">
                             Drag And Drop List
                         </Link>
+                        <Link href="/homework02/dragAndDropListLocalStorage">
+                            Drag And Drop List Local Storage
+                        </Link>
                     </div>
                 </div>
             </div>
