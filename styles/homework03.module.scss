@@ -1,0 +1,82 @@
+.home {
+    display: flex;
+    flex-direction: column;
+
+    width: 40vw;
+
+    & > * {
+        margin: 10px;
+    }
+}
+
+///////////////////////// btn_containter /////////////////////////
+.btn_containter {
+    display: flex;
+
+    justify-content: center;
+}
+
+// button {
+//     outline: none;
+// }
+
+.post_btn {
+    font-size: 16px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+
+    box-sizing: border-box;
+
+    color: #000;
+    background-color: white;
+    border: 1px solid rgb(255, 255, 255);
+
+    border-radius: 4px;
+
+    padding: 0;
+    margin: 10px;
+
+    font-family: "Courier New", Courier, monospace;
+
+    display: block;
+    text-decoration: none;
+}
+
+///////////////////////// post_containter /////////////////////////
+///
+
+.post {
+    border: 1px solid white;
+}
+
+// //////////////////////// newpost ////////////////////////
+
+.newpost {
+    display: flex;
+    flex-direction: column;
+
+    width: 30vw;
+}
+
+.textarea {
+    min-height: 20vh;
+}
+
+//////////////////////// uploadImageContent ////////////////////////
+.uploadImageContent {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    & > * {
+        margin: 10px;
+    }
+}
+
+.imagePreivew {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
