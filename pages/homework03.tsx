@@ -5,12 +5,16 @@ import index from "../styles/index.module.scss";
 import style_homework03 from "../styles/homework03.module.scss";
 
 import { RemovePostButton } from '../components/homework03/RemovePostButton';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PostContent, PostContext } from '../components/homework03/PostContent';
 import uuid from "react-uuid";
 
 export default function homework03() {
     const [posts, setPosts] = useState<PostContent[]>([]);
+
+    useEffect(() => {
+        console.log("posts has been updated:", posts);
+    }, [posts]);
 
     const handleSetPosts = (value: PostContent) => {
         // const updatedPosts = [...posts, value];
