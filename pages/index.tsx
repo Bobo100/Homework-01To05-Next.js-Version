@@ -15,6 +15,18 @@ function HomePage() {
                 <Link href="/homework01">
                     Homework 01
                 </Link>
+                <Link href="/homework02">
+                    Homework 02
+                </Link>
+                <Link href="/homework03">
+                    Homework 03
+                </Link>
+                <Link href="/homework04">
+                    Homework 04
+                </Link>
+                <Link href="/homework05">
+                    Homework 05
+                </Link>
             </div>
         </Layout>
     )

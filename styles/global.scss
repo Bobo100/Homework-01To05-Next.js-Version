@@ -50,15 +50,24 @@ a {
     text-transform: uppercase;
 }
 
-button {
-    background-color: #ffa601;
-    border: none;
-    border-radius: 5px;
-    color: #282c34;
-    cursor: pointer;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 10px;
+// button {
+//     background-color: #ffa601;
+//     border: none;
+//     border-radius: 5px;
+//     color: #282c34;
+//     cursor: pointer;
+//     font-size: 1.5rem;
+//     font-weight: bold;
+//     margin: 10px;
+//     padding: 10px;
+//     text-transform: uppercase;
+// }
+
+.border {
+    border: 3px;
+    border-style: dashed;
+}
+
+.padding {
     padding: 10px;
-    text-transform: uppercase;
 }
