@@ -25,23 +25,6 @@ const SubmitButton: React.FC<PostContent> = ({ id, title, content, image }) => {
         handleSetPosts(data)
     }
 
-    // const handleSubmit = useCallback(() => {
-    //     const data = {
-    //         id: id,
-    //         title: title,
-    //         content: content,
-    //         image: image
-    //     };
-
-    //     console.log("data", data);
-
-    //     // 如果只有圖片，不要新增
-    //     if (!title && !content) {
-    //         return;
-    //     }
-
-    //     handleSetPosts(data);
-    // }, [id, title, content, image, handleSetPosts]);
 
     return (
         <Link href="/homework03" className="background-init">

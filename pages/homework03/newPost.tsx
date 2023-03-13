@@ -33,7 +33,7 @@ export const newPost = () => {
                 <LabelText label="content" text="Content" />
                 <TextArea labelId="content" value={contentTextArea} placeholderText="Enter your content" onChange={handleTextArea} />
 
-                <div className="uploadImageContent">
+                <div className={style_homework03.uploadImageContent}>
                     {imageData && <img className={style_homework03.imagePreivew} src={imageData} alt="123" />}
                     <InputFile labelId="image" placeholderText="Upload image" onChange={handleFileChange} />
                 </div>

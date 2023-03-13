@@ -31,10 +31,10 @@ code {
     flex-direction: column;
 }
 
-img {
-    max-width: 100%;
-    display: block;
-}
+// img {
+//     max-width: 100%;
+//     display: block;
+// }
 
 a {
     text-decoration: none;
@@ -74,4 +74,16 @@ a {
 
 .background-init {
     background-color: initial;
+}
+
+.App {
+    position: relative;
+    background-color: #282c34;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2vmin;
+    color: white;
+    text-align: center;
 }
