@@ -1,8 +1,16 @@
 import Head from 'next/head'
 import Link from 'next/link';
+import { useState } from 'react';
+import InputFile from '../components/homework03/InputFile';
+import Canvas from '../components/homework04/Canvas';
 import Layout from '../components/layout'
 import index from "../styles/index.module.scss";
 export default function homework04() {
+    const [imageData, setImageData] = useState("");
+    const handleFileChange = (value: string) => {
+        setImageData(value);
+    };
+
     return (
         <Layout>
             <Head>
@@ -10,13 +18,20 @@ export default function homework04() {
             </Head>
             <div className={`${index.App}`} >
                 <div>
-                    <h1>homework04</h1>
-                </div>
+                    <div>
+                        <h1>homework04</h1>
+                    </div>
 
-                <div>
-                    <Link href="/">
-                        Home
-                    </Link>
+                    <div>
+                        <InputFile labelId="file" placeholderText="Choose a file" onChange={handleFileChange} />
+                        {imageData && <Canvas src={imageData} />}
+                    </div>
+
+                    <div className='margin'>
+                        <Link href="/">
+                            Home
+                        </Link>
+                    </div>
                 </div>
             </div>
         </Layout>
