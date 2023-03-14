@@ -1,9 +1,9 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-import { InputText } from "../components/InputText";
-import { BtnSubmitInputText } from "../components/BtnSubmitInputText";
-import { InputTextLimitLength, InputTextOnlyAlphabet, InputTextOnlyNumber, InputTextSpecialRule } from "../components/InputTextWithRegex";
+import { InputText } from "../components/homework01/InputText";
+import { BtnSubmitInputText } from "../components/homework01/BtnSubmitInputText";
+import { InputTextLimitLength, InputTextOnlyAlphabet, InputTextOnlyNumber, InputTextSpecialRule } from "../components/homework01/InputTextWithRegex";
 import Layout from '../components/layout';
 import index from "../styles/index.module.scss";
 export default function homework01() {

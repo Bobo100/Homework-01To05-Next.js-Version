@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import uuid from "react-uuid";
-import { ClickButton } from "../../components/ClickButton";
+import { ClickButton } from "../../components/homework02/ClickButton";
 import Link from 'next/link';
 import index from "../../styles/index.module.scss";
 import style_homework02 from "../../styles/homework02.module.scss";

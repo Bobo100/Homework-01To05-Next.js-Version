@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link';
 import { useState } from 'react';
-import InputFile from '../components/homework03/InputFile';
+import InputFile from '../components/InputFile';
 import Canvas from '../components/homework04/Canvas';
 import Layout from '../components/layout'
 import index from "../styles/index.module.scss";

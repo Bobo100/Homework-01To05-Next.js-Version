@@ -5,7 +5,7 @@ import InputText from "../../../components/homework03/InputText";
 import LabelText from "../../../components/homework03/LabelText";
 
 import TextArea from "../../../components/homework03/TextArea";
-import InputFile from "../../../components/homework03/InputFile";
+import InputFile from "../../../components/InputFile";
 import { PostContext } from "../../../components/homework03/PostContent";
 import ModifyButton from "../../../components/homework03/ModifyButton";
 import { useRouter } from "next/router";

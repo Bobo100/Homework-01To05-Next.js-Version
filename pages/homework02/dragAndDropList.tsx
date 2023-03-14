@@ -1,7 +1,7 @@
 // 加上button 去移動當前的div
 import React, { useState } from "react";
 import uuid from "react-uuid";
-import { ClickButton } from "../../components/ClickButton";
+import { ClickButton } from "../../components/homework02/ClickButton";
 import index from "../../styles/index.module.scss";
 import style_homework02 from "../../styles/homework02.module.scss";
 import Link from "next/link";

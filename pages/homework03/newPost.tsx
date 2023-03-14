@@ -3,7 +3,7 @@ import InputText from "../../components/homework03/InputText";
 import LabelText from "../../components/homework03/LabelText";
 import SubmitButton from "../../components/homework03/SubmitButton";
 import TextArea from "../../components/homework03/TextArea";
-import InputFile from "../../components/homework03/InputFile";
+import InputFile from "../../components/InputFile";
 import uuid from "react-uuid";
 import index from "../../styles/index.module.scss";
 import style_homework03 from "../../styles/homework03.module.scss";
