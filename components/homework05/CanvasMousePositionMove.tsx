@@ -4,108 +4,76 @@ import { ZoomControls } from "./ZoomControls";
 import { Decimal } from "decimal.js"
 import Scrollbar from "./Scrollbar";
 import Scrollbar_Vertical from "./Scrollbar_Vertical";
-
 import style_homework05 from "../../styles/homework05.module.scss";
 
 export default function CanvasMousePositionMove(props: { src: string }) {
-
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const [image, setImage] = useState<HTMLImageElement | null>(null);
     const [scaleFactor, setScaleFactor] = useState(1);
-
-    // 滑鼠在瀏覽器中的座標
-    const [mousepos, setMousepos] = useState({ x: 0, y: 0 });
-    // 滑鼠在Canvas中的座標
-    const [mouseposInCanvas, setMouseposInCanvas] = useState({ x: 0, y: 0 });
-    // 滑鼠在Canvas中的座標 到 中心點 的距離
-    const [mouseposInCanvasToCenter, setMouseposInCanvasToCenter] = useState({ x: 0, y: 0 });
-
     const maxScaleFactor = 3;
     const minScaleFactor = 1;
-    // 設定小數點位數
-    Decimal.set({ precision: 10 });
+    // 紀錄滑鼠的位置
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+    // 第一次載入圖片
     useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) {
-            return;
-        }
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-            return;
-        }
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-
         const img = new Image();
         img.src = props.src;
-
+        // 當圖片載入完成後，才把圖片設定到state
         img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
+            setImage(img);
+        }
+    }, [props.src]);
 
-
-            ctx.transform(1, 0, 0, 1, centerX, centerY);
-            ctx.translate(mouseposInCanvasToCenter.x, mouseposInCanvasToCenter.y);
-            ctx.scale(scaleFactor, scaleFactor); // 調整縮放比例
-            ctx.translate(-mouseposInCanvasToCenter.x, -mouseposInCanvasToCenter.y);
-            ctx.drawImage(img, -centerX, -centerY);
-
-        };
+    useEffect(() => {
+        if (!image) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        // 把canvas的大小設定成圖片的大小，方便縮放
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const rect = canvas.getBoundingClientRect();
+        const mouse_canvas_x = mousePosition.x * image.width / rect.width;
+        const mouse_canvas_y = mousePosition.y * image.height / rect.height;
+        // 清除畫布
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // 將canvas的原點移動到滑鼠的位置
+        ctx.translate(mouse_canvas_x, mouse_canvas_y);
+        // 縮放圖片
+        ctx.scale(scaleFactor, scaleFactor);
+        // 移動圖片的原點到滑鼠的位置
+        ctx.translate(-mouse_canvas_x, -mouse_canvas_y);
+        // 繪製圖片
+        ctx.drawImage(image, 0, 0);
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
             const delta = -Math.sign(e.deltaY);
-
             let newScaleFactor = scaleFactor;
             if ((scaleFactor < maxScaleFactor && delta > 0) || (scaleFactor > minScaleFactor && delta < 0)) {
                 newScaleFactor = new Decimal(scaleFactor).plus(delta * 0.1).toNumber();
             }
-
             if (newScaleFactor !== scaleFactor) {
-                const canvasBox = canvas.getBoundingClientRect();
-
-                const mouseposInCanvasXS = new Decimal(e.offsetX).times(canvas.width).dividedBy(canvasBox.width).toFixed(2);
-                const mouseposInCanvasYS = new Decimal(e.offsetY).times(canvas.height).dividedBy(canvasBox.height).toFixed(2);
-                const mouseposInCanvasX = Number(mouseposInCanvasXS);
-                const mouseposInCanvasY = Number(mouseposInCanvasYS);
-
-                setMouseposInCanvasToCenter({
-                    x: mouseposInCanvasX - centerX,
-                    y: mouseposInCanvasY - centerY
-                });
                 setScaleFactor(newScaleFactor);
             }
-        };
-
-        canvas.addEventListener("wheel", handleWheel);
+        }
+        canvas.addEventListener('wheel', handleWheel);
 
         const handleMouseMove = (e: MouseEvent) => {
-            const canvasBox = canvas.getBoundingClientRect();
-            // const mouseposInCanvasX = new Decimal(e.offsetX).times(canvas.width).dividedBy(canvasBox.width).toNumber();
-            // const mouseposInCanvasY = new Decimal(e.offsetY).times(canvas.height).dividedBy(canvasBox.height).toNumber();
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            setMousePosition({ x, y });
+        }
+        canvas.addEventListener('mousemove', handleMouseMove);
 
-            const mouseposInCanvasXS = new Decimal(e.offsetX).times(canvas.width).dividedBy(canvasBox.width).toFixed(2);
-            const mouseposInCanvasYS = new Decimal(e.offsetY).times(canvas.height).dividedBy(canvasBox.height).toFixed(2);
-            const mouseposInCanvasX = Number(mouseposInCanvasXS);
-            const mouseposInCanvasY = Number(mouseposInCanvasYS);
-
-            setMousepos({ x: e.offsetX, y: e.offsetY });
-            setMouseposInCanvas({ x: mouseposInCanvasX, y: mouseposInCanvasY });
-        };
-
-        canvas.addEventListener("mousemove", handleMouseMove);
-
-        /*
-        移除事件監聽器是為了避免產生潛在的記憶體洩漏 (memory leak)。
-        如果一個元素被註冊了一個事件，而當該元素從 DOM 樹中被一開始的父節點刪除時，它仍存在於記憶體中並保留其事件監聽器，這將繼續佔用大量記憶體並可能影響應用程序的性能。
-        因此必須定期清理或移除不再需要的事件監聽器。
-        */
         return () => {
-            canvas.removeEventListener("mousemove", handleMouseMove);
-            canvas.removeEventListener("wheel", handleWheel);
-        };
-
-    }, [mouseposInCanvasToCenter, props.src, scaleFactor]);
+            canvas.removeEventListener('wheel', handleWheel);
+            canvas.removeEventListener('mousemove', handleMouseMove);
+        }
+    }, [image, scaleFactor]);
 
     const handleZoomIn = () => {
         if (scaleFactor < maxScaleFactor) {
@@ -127,13 +95,13 @@ export default function CanvasMousePositionMove(props: { src: string }) {
         <div className="margin">
             <div className="flex center">
                 <p>滑鼠在瀏覽器中的座標:</p>
-                <div className="margin">X: {mousepos.x}</div>
-                <div className="margin">Y: {mousepos.y}</div>
+                <div className="margin">X: {mousePosition.x}</div>
+                <div className="margin">Y: {mousePosition.y}</div>
             </div>
             <div className="flex center">
                 <p>滑鼠在Canvas中的座標:</p>
-                <div className="margin">X: {mouseposInCanvas.x}</div>
-                <div className="margin">Y: {mouseposInCanvas.y}</div>
+                {/* <div className="margin">X: {mouseposInCanvas.x}</div>
+                <div className="margin">Y: {mouseposInCanvas.y}</div> */}
             </div>
             <div className="relative">
                 <canvas className={style_homework05.canvas} ref={canvasRef} />
