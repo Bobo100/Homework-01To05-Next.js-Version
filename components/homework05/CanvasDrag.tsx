@@ -11,12 +11,8 @@ export default function CanvasDrag(props: { src: string }) {
     const [scaleFactor, setScaleFactor] = useState(1);
     // 把圖片存放在state中
     const [image, setImage] = useState<HTMLImageElement | null>(null);
-
     // 新的圖片中心點
     const [imageCenter, setimageCenter] = useState({ x: 0, y: 0 });
-
-    // 記住滑鼠是否有按下 用來判斷是否要拖曳圖片
-    const [isDragging, setisDragging] = useState(false);
     // 確認是不是第一次拖移
     const [firstDrag, setFirstDrag] = useState(true);
     // 滑鼠最後的拖移位置
@@ -64,49 +60,21 @@ export default function CanvasDrag(props: { src: string }) {
                 const centerX = canvasBox.width / 2;
                 const centerY = canvasBox.height / 2;
 
-                // 新想法 但這個做法還是不對
-                // 1. 如果正在縮小，且還沒有縮到最小，就不要改變圖片中心點
-                // 2. 如果正在放大，則要改變圖片中心點
-                if (delta < 0 && scaleFactor > minScaleFactor) {
-                    // 縮小
-                    // 不要改變圖片中心點
-                } else {
-                    // 放大
-                    // 計算新的圖片中心點 = 滑鼠位置 - 圖片位置
+                if (delta > 0) {
+                    let offsetX = e.offsetX < centerX ? - 10 : 10;
+                    let offsetY = e.offsetY < centerY ? - 10 : 10;                   
 
-                    // 如果是第一次放大，就把圖片中心點設定為滑鼠位置，不是的話就根據滑鼠在圖片的方向來增加或減少圖片中心點
-                    if (newScaleFactor === 1.1) {
-                        setimageCenter({
-                            x: e.offsetX,
-                            y: e.offsetY
-                        });
-                    } else {
-                        let offsetX = 10;
-                        let offsetY = 10;
-                        if (e.offsetX < centerX) {
-                            offsetX = -10;
-                        }
-                        if (e.offsetY < centerY) {
-                            offsetY = -10;
-                        }
-
-                        if (imageCenter.x + offsetX < 0) {
-                            offsetX = 0;
-                        }
-                        if (imageCenter.y + offsetY < 0) {
-                            offsetY = 0;
-                        }
-                        if (imageCenter.x + offsetX > canvasBox.width) {
-                            offsetX = 0;
-                        }
-                        if (imageCenter.y + offsetY > canvasBox.height) {
-                            offsetY = 0;
-                        }
-                        setimageCenter({
-                            x: imageCenter.x + offsetX,
-                            y: imageCenter.y + offsetY
-                        });
+                    if (imageCenter.x + offsetX < 0 || imageCenter.x + offsetX > canvasBox.width || imageCenter.y + offsetY < 0 || imageCenter.y + offsetY > canvasBox.height) {
+                        offsetX = 0;
                     }
+                    if (imageCenter.y + offsetY < 0 || imageCenter.y + offsetY > canvasBox.height) {
+                        offsetY = 0;
+                    }
+
+                    setimageCenter({
+                        x: imageCenter.x + offsetX,
+                        y: imageCenter.y + offsetY
+                    });
                 }
                 setScaleFactor(newScaleFactor);
             }
@@ -114,32 +82,20 @@ export default function CanvasDrag(props: { src: string }) {
 
         canvas.addEventListener("wheel", handleWheel);
 
-        // 新增drag
-        canvas.addEventListener("mousedown", () => {
-            setisDragging(true);
-            setFirstDrag(true);
-        });
-        canvas.addEventListener("mouseup", () => {
-            setisDragging(false);
-            setFirstDrag(true);
-        });
-        canvas.addEventListener("mouseleave", () => {
-            setisDragging(false);
-            setFirstDrag(true);
-        });
         const handleMouseMove = (e: MouseEvent) => {
             const canvasBox = canvas.getBoundingClientRect();
             if (e.offsetX < 0 || e.offsetY < 0 || e.offsetX > canvasBox.width || e.offsetY > canvasBox.height) {
                 return;
             }
 
-            if (scaleFactor === 1) return;
+            if (scaleFactor <= 1) return;
 
             // 滑鼠要按住才能拖曳
-            if (isDragging) {
+            if (e.buttons === 1) {
                 // 如果是第一次拖曳，就不計算滑鼠的偏移量
                 let lastPos = lastMousePosition;
                 if (firstDrag) {
+                    console.log("第一次拖曳")
                     lastPos = { x: e.offsetX, y: e.offsetY };
                     setFirstDrag(false);
                 }
@@ -149,26 +105,12 @@ export default function CanvasDrag(props: { src: string }) {
                 const offsetXInCanvasN = Number(offsetX);
                 const offsetYInCanvasN = Number(offsetY);
 
-                // 如果圖片的左邊超出canvas，就不要再往左邊拖曳
-                if (imageCenter.x - offsetXInCanvasN < 0) {
+                // 如果圖片超出邊界，就不要再拖曳
+                if (imageCenter.x - offsetXInCanvasN < 0 || imageCenter.x - offsetXInCanvasN > canvasBox.width || imageCenter.y - offsetYInCanvasN < 0 || imageCenter.y - offsetYInCanvasN > canvasBox.height) {
                     setLastMousePosition({ x: e.offsetX, y: e.offsetY });
                     return;
                 }
-                // 如果圖片的右邊超出canvas，就不要再往右邊拖曳
-                if (imageCenter.x - offsetXInCanvasN > canvasBox.width) {
-                    setLastMousePosition({ x: e.offsetX, y: e.offsetY });
-                    return;
-                }
-                // 如果圖片的上邊超出canvas，就不要再往上邊拖曳
-                if (imageCenter.y - offsetYInCanvasN < 0) {
-                    setLastMousePosition({ x: e.offsetX, y: e.offsetY });
-                    return;
-                }
-                // 如果圖片的下邊超出canvas，就不要再往下邊拖曳
-                if (imageCenter.y - offsetYInCanvasN > canvasBox.height) {
-                    setLastMousePosition({ x: e.offsetX, y: e.offsetY });
-                    return;
-                }
+
                 // 計算新的圖片中心點 - 原本的圖片中心點  - 偏移量
                 setimageCenter({
                     x: imageCenter.x - offsetXInCanvasN,
@@ -207,8 +149,19 @@ export default function CanvasDrag(props: { src: string }) {
             ctx.translate(-mouseposInCanvasX, -mouseposInCanvasY);
             ctx.drawImage(image, 0, 0);
         }
+    }, [image, scaleFactor, firstDrag, imageCenter, lastMousePosition]);
 
-    }, [image, scaleFactor, isDragging, firstDrag, imageCenter, lastMousePosition]);
+    function handleMouseDown() {
+        setFirstDrag(true);
+    }
+
+    function handleMouseUp() {
+        setFirstDrag(true);
+    }
+
+    function handleMouseLeave() {
+        setFirstDrag(true);
+    }
 
     const handleZoomIn = () => {
         if (scaleFactor < maxScaleFactor) {
@@ -229,7 +182,11 @@ export default function CanvasDrag(props: { src: string }) {
     return (
         <div className="margin">
             <div className="relative">
-                <canvas className={style_homework05.canvas} ref={canvasRef} />
+                <canvas className={style_homework05.canvas} ref={canvasRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
+                />
                 <Scrollbar_Vertical min={minScaleFactor} max={maxScaleFactor} step={0.1} value={scaleFactor} onChange={handleChange} />
             </div>
             <Scrollbar min={minScaleFactor} max={maxScaleFactor} step={0.1} value={scaleFactor} onChange={handleChange} />

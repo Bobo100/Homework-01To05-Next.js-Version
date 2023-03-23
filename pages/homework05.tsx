@@ -25,11 +25,10 @@ export default function homework04() {
                         <h1>homework05</h1>
                     </div>
 
-                    {imageData && <h1>中心點縮放</h1>}
-                    {imageData &&
-                        <Canvas src={imageData} />}
+                    {/* {imageData && <h1>中心點縮放</h1>}
+                    {imageData && <Canvas src={imageData} />}
                     {imageData && <h1>根據滑鼠位置縮放</h1>}
-                    {imageData && <CanvasMousePositionMove src={imageData} />}
+                    {imageData && <CanvasMousePositionMove src={imageData} />} */}
                     {imageData && <h1>可拖曳</h1>}
                     {imageData && <CanvasDrag src={imageData} />}
 
