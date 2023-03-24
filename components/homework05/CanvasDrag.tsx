@@ -24,14 +24,12 @@ export default function CanvasDrag(props: { src: string }) {
     Decimal.set({ precision: 10 });
 
     // 第一次載入圖片
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
+    useEffect(() => {       
         const img = new Image();
         img.src = props.src;
-        setImage(img);
+        img.onload = () => {
+            setImage(img);
+        }
     }, [props.src]);
 
     useEffect(() => {
@@ -62,7 +60,7 @@ export default function CanvasDrag(props: { src: string }) {
 
                 if (delta > 0) {
                     let offsetX = e.offsetX < centerX ? - 10 : 10;
-                    let offsetY = e.offsetY < centerY ? - 10 : 10;                   
+                    let offsetY = e.offsetY < centerY ? - 10 : 10;
 
                     if (imageCenter.x + offsetX < 0 || imageCenter.x + offsetX > canvasBox.width || imageCenter.y + offsetY < 0 || imageCenter.y + offsetY > canvasBox.height) {
                         offsetX = 0;
