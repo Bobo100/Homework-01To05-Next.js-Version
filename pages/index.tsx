@@ -4,7 +4,6 @@ import Layout from '../components/layout';
 import index from "../styles/index.module.scss";
 
 function HomePage() {
-
     return (
         <Layout>
             <Head>
@@ -26,6 +25,9 @@ function HomePage() {
                 </Link>
                 <Link href="/homework05">
                     Homework 05
+                </Link>
+                <Link href="/propsTest">
+                    propsTest
                 </Link>
             </div>
         </Layout>
